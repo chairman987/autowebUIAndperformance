@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact name="WebUITestTool:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/WebUITestTool_jar</output-path>
+    <root id="root">
+      <element id="archive" name="WebUITestTool.jar">
+        <element id="module-output" name="WebUITestTool" />
+      </element>
+      <element id="library" level="project" name="lib" />
+    </root>
+  </artifact>
+</component>

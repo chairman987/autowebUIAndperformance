@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Class-Path: sac-1.3.jar jna-4.1.0.jar gson-2.8.0.jar guava-23.0.jar ju
+ nit-4.12.jar xalan-2.7.2.jar htmlunit-2.27.jar commons-io-2.5.jar htt
+ pcore-4.4.6.jar httpmime-4.5.3.jar xml-apis-1.4.01.jar commons-exec-1
+ .3.jar cssparser-0.9.23.jar httpclient-4.5.3.jar serializer-2.7.2.jar
+  cglib-nodep-3.2.4.jar commons-lang3-3.5.jar hamcrest-core-1.3.jar xe
+ rcesImpl-2.11.0.jar commons-codec-1.10.jar jna-platform-4.1.0.jar nek
+ o-htmlunit-2.27.jar commons-logging-1.2.jar htmlunit-driver-2.27.jar 
+ htmlunit-core-js-2.27.jar phantomjsdriver-1.4.0.jar javax.servlet-api
+ -3.1.0.jar jetty-io-9.4.5.v20170502.jar jetty-http-9.4.5.v20170502.ja
+ r jetty-util-9.4.5.v20170502.jar client-combined-3.5.3-nodeps.jar jet
+ ty-client-9.4.5.v20170502.jar websocket-api-9.4.5.v20170502.jar webso
+ cket-client-9.4.5.v20170502.jar websocket-common-9.4.5.v20170502.jar
+Main-Class: 
+
