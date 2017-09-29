@@ -1,10 +1,15 @@
+import Model.ResutStaticsModel;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -13,6 +18,7 @@ public class HttpPerformance  {
         private  String  _url = "";
         private  String  _getParam = "";
         private  String  _postParam = "";
+        private  int  httpOkCode = 200 ;
 
         public HttpPerformance(String needUrl){
 
@@ -26,35 +32,104 @@ public class HttpPerformance  {
         if (counter <= 0)
             counter = 1;
         for(Integer cishu = 0; cishu < counter ;counter ++ ){
-
             String    res =   sendGet(_url,param);
             //Log 4  记录  返回  结果和时间
         }
-
     }
         /**
          * 1.指定URL get counter 次
          * */
-        public void getMedthodTest(int counter,String param){
-
+        public ResutStaticsModel getMedthodBatchTest(int counter,String param){
+            ResutStaticsModel resutStaticsModel = new ResutStaticsModel();
+            List<ResutStaticsModel> subList= new Vector<ResutStaticsModel>();
             if (counter <= 0)
                 counter = 1;
-            for(Integer cishu = 0; cishu < counter ;counter ++ ){
-               String    res =   sendGet(_url,param);
-               //Log 4  记录  返回  结果和时间
+            Integer suc = 0;
+            Integer fail = 0;
+            Integer all = 0;
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            String begin =   df.format(new Date());// new Date()为获取当前系统时间
+            int processCounter = 1;
+            int processZeroCounter = 0;
+            for(Integer cishu = 0; cishu < counter ;cishu ++ ){
+                ResutStaticsModel resutStaticsModelSub = new ResutStaticsModel();
+                String beginSub =   df.format(new Date());// new Date()为获取当前系统时间
+               Integer    res =   getHttpStatusCode(_url,param);
+                if (res == httpOkCode)
+                {
+                    suc++;
+                    resutStaticsModelSub.setSuce(processCounter);
+                    resutStaticsModelSub.setFail(processZeroCounter);
+                }
+                else
+                    {
+                        fail ++;
+                        resutStaticsModelSub.setSuce(processZeroCounter);
+                        resutStaticsModelSub.setFail(processCounter);
+                    }
+
+                all++;
+                String endSub =   df.format(new Date());
+                resutStaticsModelSub.setAll(processCounter);
+                resutStaticsModelSub.setMark(beginSub+":"+endSub);
+                resutStaticsModelSub.setBatchId(String.valueOf(java.util.UUID.randomUUID()) );
+                subList.add(resutStaticsModelSub);
             }
+            String end =   df.format(new Date());
+            resutStaticsModel.setAll(all);
+            resutStaticsModel.setSuce(suc);
+            resutStaticsModel.setFail(fail);
+            resutStaticsModel.setMark(begin+"结束"+end);
+            resutStaticsModel.setBatchId(String.valueOf(java.util.UUID.randomUUID()) );
+            resutStaticsModel.setSubList(subList);
+            return  resutStaticsModel;
         }
 
-    public void postMedthodTest(int counter,String param){
+    public ResutStaticsModel postMedthodBatchTest(int counter, String param){
 
+        ResutStaticsModel resutStaticsModel = new ResutStaticsModel();
+        List<ResutStaticsModel> subList= new Vector<ResutStaticsModel>();
         if (counter <= 0)
             counter = 1;
-        for(Integer cishu = 0; cishu < counter ;counter ++ ){
-
-            String    res =   sendPost(_url,param);
+        Integer suc = 0;
+        Integer fail = 0;
+        Integer all = 0;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        String begin =   df.format(new Date());// new Date()为获取当前系统时间
+        int processCounter = 1;
+        int processZeroCounter = 0;
+        for(Integer cishu = 0; cishu < counter ;cishu ++ ){
+            ResutStaticsModel resutStaticsModelSub = new ResutStaticsModel();
+            String beginSub =   df.format(new Date());// new Date()为获取当前系统时间
+            int    res =   postHttpStatusCode(_url,param);
             //Log 4  记录  返回  结果和时间
+           if (res == httpOkCode)
+           {
+               suc++;
+               resutStaticsModelSub.setSuce(processCounter);
+               resutStaticsModelSub.setFail(processZeroCounter);
+           }
+           else
+           {
+               fail ++;
+               resutStaticsModelSub.setSuce(processZeroCounter);
+               resutStaticsModelSub.setFail(processCounter);
+           }
+            all++;
+            String endSub =   df.format(new Date());
+            resutStaticsModelSub.setAll(processCounter);
+            resutStaticsModelSub.setMark(beginSub+":"+endSub);
+            resutStaticsModelSub.setBatchId(String.valueOf(java.util.UUID.randomUUID()) );
+            subList.add(resutStaticsModelSub);
         }
-
+        String end =   df.format(new Date());
+        resutStaticsModel.setAll(all);
+        resutStaticsModel.setSuce(suc);
+        resutStaticsModel.setFail(fail);
+        resutStaticsModel.setMark(begin+"结束"+end);
+        resutStaticsModel.setBatchId(String.valueOf(java.util.UUID.randomUUID()) );
+        resutStaticsModel.setSubList(subList);
+        return  resutStaticsModel;
     }
     public void getMedthodTestAsnyc(int counter,String param) {
         try{
@@ -62,14 +137,12 @@ public class HttpPerformance  {
                 counter = 1;
             ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
             _getParam = param;
-            for(Integer cishu = 0; cishu < counter ;counter ++ ){
-
+            for(Integer cishu = 0; cishu < counter ;cishu ++ ){
                 cachedThreadPool.execute(new Runnable() {
                     public void run() {
                         String    res =   sendGet(_url,_getParam);
                     }
                 });
-
                 //Log 4  记录  返回  结果和时间
             }
         }catch (Exception e) {}
@@ -82,8 +155,7 @@ public class HttpPerformance  {
             counter = 1;
         ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
        _postParam  = param;
-        for(Integer cishu = 0; cishu < counter ;counter ++ ){
-
+        for(Integer cishu = 0; cishu < counter ;cishu ++ ){
             cachedThreadPool.execute(new Runnable() {
                 public void run() {
                     String    res =   sendPost(_url,_postParam);
@@ -102,13 +174,13 @@ public class HttpPerformance  {
             step = 2;
         int processCount = 0;
         while (processCount <= counter) {
-            for (Integer cishu = 0; cishu < step; counter++) {
+            for (Integer cishu = 0; cishu < step%counter; cishu++) {
 
                 String res = sendGet(_url, param);
                 //Log 4  记录  返回
                 processCount++;
             }
-            step += step;//模拟批次执行 每次增加2 个 不是
+            //模拟批次执行 每次step 个
         }
     }
     public void postMedthodTest(int counter,String param,int step){
@@ -117,16 +189,14 @@ public class HttpPerformance  {
             counter = 1;
         int processCount = 0;
         while(processCount <=counter  ){
-            for(Integer cishu = 0; cishu < step ;counter ++ ){
+            for(Integer cishu = 0; cishu < step ;cishu ++ ){
 
                 String    res =   sendPost(_url,param);
                 //Log 4  记录  返回
                 processCount ++ ;
             }
-            step += step ;//模拟批次执行 每次增加2 个 不是
+            //模拟批次执行 每次step 个
         }
-
-
     }
     public static  int getHttpStatusCode(String url,String param){
         int ok = -1;
