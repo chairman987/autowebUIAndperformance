@@ -1,3 +1,5 @@
+package webUITestTool;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 

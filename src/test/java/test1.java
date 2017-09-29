@@ -1,3 +1,5 @@
+import Performance.HttpPerformance;
+
 public class test1 {
     public static void main(String[] args) {
         System.out.println("Hello World!");
@@ -17,7 +19,7 @@ public class test1 {
     }
     private static void TestHttpgetCodeBatch() {
         String _url = "http://www.xs.la/0_32/4649504.html" ;
-        HttpPerformance  _http = new HttpPerformance(_url);
+        HttpPerformance _http = new HttpPerformance(_url);
         System.out.println( "Http info "+_http.getMedthodBatchTest(100,"key=1").getStatisMsg());
     }
     private static void testgetHttpCode() {

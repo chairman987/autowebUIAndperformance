@@ -1,4 +1,7 @@
+package Performance;
+
 import Model.ResutStaticsModel;
+import webUITestTool.StreamTool;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -216,7 +219,7 @@ public class HttpPerformance  {
                     }
                     String content = new String(sb);
                     content = new String(content.getBytes("GBK"), "ISO-8859-1");
-                    System.out.println(content);
+                   // System.out.println(content);
                     br.close();
                 } catch (Exception e) {
                     ok = 0;

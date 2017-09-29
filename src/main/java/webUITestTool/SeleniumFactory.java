@@ -1,3 +1,4 @@
+package webUITestTool;
 import org.openqa.selenium.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ByIdOrName;
