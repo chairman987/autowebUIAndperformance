@@ -5,9 +5,7 @@ import Performance.HttpPerformance;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,7 +13,11 @@ import static Performance.HttpPerformance.getHttpStatusCode;
 import static Performance.HttpPerformance.sendGet;
 
 public class PerformanceTool {
+ private HashMap<String , ResutStaticsModel>  _map = new HashMap<String , ResutStaticsModel>();
 
+ public HashMap<String , ResutStaticsModel> get_map(){
+     return _map;
+ }
     public static int compare_date(String DATE1, String DATE2) {
 
 
@@ -93,13 +95,12 @@ public class PerformanceTool {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         String begin =   df.format(new Date());// new Date()为获取当前系统时间
         while (indexCurrent<maxTests){
-
-            if(isrun == false)
+            //System.out.println("not  exit  while out");
+           // System.out.println(maxTests +"----" +  indexCurrent);
+            if(isrun == false){
                 break;
-//            for(int index = 0;index < step;index++){
-//
-//                indexCurrent++;
-//            }
+            }
+
             try{
 
                 ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
@@ -112,22 +113,25 @@ public class PerformanceTool {
                             int processCounter = 1;
                             int processZeroCounter = 0;
                             for(int index = 0;index < _step;index++ ){
-                                if(isrun == false)
-                                {
-                                    index = _step;
-                                    break;
-                                }
+
 
                                 while(true){
+
                                     Date nowMM = new Date();
-                                   if(compare_date(_endTime,nowMM) == -1){
-                                       isrun = false;
+
+                                   if(compare_date(_endTime,nowMM) != 1){
+                                            isrun = false;
                                             break;
                                    }
+                                    //System.out.println( _endTime +"-----"+nowMM);
                                     ResutStaticsModel resutStaticsModelSub = new ResutStaticsModel();
                                     String beginSub =   df.format(new Date());// new Date()为获取当前系统时间
-                                    int    res =   getHttpStatusCode(_url,_getParam);
-                                    System.out.println("getHttpStatusCode excute! isrun = "+isrun);
+                                   // int    res =   getHttpStatusCode(_url,_getParam);
+
+                                    //System.out.println(_step);
+                                    int    res = 200;
+                                         //   System.out.println("getHttpStatusCode excute! isrun = "+isrun+" res = "+res +" "+ _endTime
+                                           //         +" "+new Date().toString() );
                                     //Log 4  记录  返回  结果和时间
                                     if (res == httpOkCode)
                                     {
@@ -146,16 +150,21 @@ public class PerformanceTool {
                                     resutStaticsModelSub.setAll(processCounter);
                                     resutStaticsModelSub.setMark(beginSub+":"+endSub);
                                     resutStaticsModelSub.setBatchId(String.valueOf(java.util.UUID.randomUUID()) );
-                                    _subList.add(resutStaticsModelSub);
-
+                                    _map.put( UUID.randomUUID().toString().replaceAll("-", ""),resutStaticsModelSub);
+//   System.out.println("getHttpStatusCode excute! isrun = "+isrun+" res = "+res +" "+ _endTime
+//                                             +" "+new Date().toString() );
 
                                     try {
-                                        Thread.sleep(100);// 睡眠100毫秒
+                                        Thread.sleep(500);// 睡眠100毫秒
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
                                 }
-
+//                                if(isrun == false)
+//                                {
+//                                    index = _step;
+//                                    break;
+//                                }
                             }
                         }
                     });

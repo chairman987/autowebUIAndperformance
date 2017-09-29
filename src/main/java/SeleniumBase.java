@@ -1,6 +1,10 @@
+import Model.ResutStaticsModel;
 import Performance.HttpPerformance;
 import Performance.PerformanceTool;
 import webUITestTool.SeleniumFactory;
+
+import java.util.Date;
+import java.util.HashMap;
 
 public class SeleniumBase {
     public static void main(String[] args) throws InterruptedException {
@@ -9,22 +13,37 @@ public class SeleniumBase {
         //WebUI();
         //TestHttpgetCode();
         //TestHttpgetCodeBatch();
-        System.out.println("结束!");
 
-        String _url = "http://www.qu.la/book/148/" ;
+
+        batchStepTest();
+    }
+
+    private static void batchStepTest() throws InterruptedException {
+        String _url = "http://www.chinanews.com/yl/2015/06-16/7347550.shtml" ;
         PerformanceTool _http = new PerformanceTool();
-        _http.processTest(_url,"ke=1",1000,4,50,false,5);
+        Integer mm =2;
+        _http.processTest(_url,"ke=1",2,1,1,false,mm);
+        Date begin = new Date();
+        Date endTime = new Date(begin .getTime() + mm*1000);
         while (_http.getIsRun()){
 
-            System.out.println( " is run check");
-            System.out.println( "\n");
+
             Thread.sleep(100);// 睡眠100毫秒
+            if (PerformanceTool.compare_date(endTime, new Date()) != 1)
             break;
 
         }
-        System.out.println( "Http info end .msg 是"+ _http.get_resutStaticsModel().getStatisMsg());
+        System.out.println( " run over");
+        HashMap<String , ResutStaticsModel> all =  _http .get_map();
+        if(all.values().size() == 0){
+            System.out.println( " all.values().size() == 0 ");
+        }
+        System.out.println( " all.values().size() "+all.values().size() );
+        for (ResutStaticsModel value :all.values()) {
 
+            System.out.println("Value = " + value.getStatisMsg());
 
+        }
     }
 
     private static void WebUI() {
