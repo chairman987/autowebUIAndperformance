@@ -1,36 +1,34 @@
 package webUITestTool;
+
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.support.ByIdOrName;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- *  seleuim page factory 生成selenium 的 page 对象
- * */
-public class SeleniumFactory {
-    private  WebDriver  _driver;
-        public WebDriver getDriver(){
+public class SeleniumChrome {
+    private WebDriver _driver;
+    public WebDriver getNewDriver(){
 
-        WebDriver driver = new InternetExplorerDriver();
+        WebDriver driver = (WebDriver) ChromeDriverService.createDefaultService();
 
         return driver;
     }
-
-    public  WebDriver currentWebDriver(){
-      return _driver;
+    public SeleniumChrome(){
+        _driver = (WebDriver) ChromeDriverService.createDefaultService();
     }
-/**  单例模式
- * */
     public WebDriver SingltonDriver(){
 
         if( _driver == null){
-            WebDriver driver = new InternetExplorerDriver();
+            WebDriver driver = (WebDriver) ChromeDriverService.createDefaultService();
             _driver = driver;
         }
 
+        return _driver;
+    }
+    public  WebDriver currentWebDriver(){
         return _driver;
     }
 
@@ -38,10 +36,10 @@ public class SeleniumFactory {
      * get html WebElement get 控件 标签
      */
     public WebElement getHtmlByIdOrName(String input){
-    String pageSource =  _driver.getPageSource().toLowerCase() ;
-     if( pageSource .contains("name="+input))
-         return   _driver.findElement( By.name(input));
-         else    return _driver.findElement(By.id(input));
+        String pageSource =  _driver.getPageSource().toLowerCase() ;
+        if( pageSource .contains("name="+input))
+            return   _driver.findElement( By.name(input));
+        else    return _driver.findElement(By.id(input));
     }
 
     /**
@@ -107,15 +105,15 @@ public class SeleniumFactory {
     public WebElement getHtmlMohu(String input){
         String pageSource =  _driver.getPageSource().toLowerCase() ;
 
-      if (!pageSource.contains(input))
-        return null;
+        if (!pageSource.contains(input))
+            return null;
         if( pageSource .contains("name="+input))
             return _driver.findElement(By.name(input));
         if( pageSource .contains("id="+input))
             return _driver.findElement(By.id(input));
         if( pageSource .contains("classname="+input))
             return _driver.findElement(By.className(input));
-       return _driver.findElement(By.partialLinkText(input));
+        return _driver.findElement(By.partialLinkText(input));
     }
 
 
@@ -150,7 +148,7 @@ public class SeleniumFactory {
      * */
     public WebDriver doJsCodeGaoji(String jsCode,String param) {
         //"alert(\"hello,this is a alert!\")”;
-       // ((JavascriptExecutor) driver).executeScript(String js, Object args);
+        // ((JavascriptExecutor) driver).executeScript(String js, Object args);
         //此方法有两个参数，第一个是js脚本，至于js脚本你像写点击的或者输入的脚本都可以，我们这里举例为点击操作。第二个参数是：要点击的元素。
         // 比如我要点击百度搜索的搜索按钮，可以这样写：
         //((JavascriptExecutor) driver).executeScript(“arguments[0].click();”, driver.findElement(By.id(“su”)));
@@ -221,7 +219,7 @@ public class SeleniumFactory {
 
         // 获取所有的选项
         List<WebElement> options = select.getOptions();
-        return options;
+       return options;
     }
     public List<WebElement> getHtmlCtrlsXpath(String xpath){
         return _driver.findElements(By.xpath(xpath));
@@ -249,17 +247,18 @@ public class SeleniumFactory {
         _driver.quit();
         System.gc();
         //so do log
-        _driver = new InternetExplorerDriver();
+        _driver = (WebDriver) ChromeDriverService.createDefaultService();
     }
     public void closePage(WebDriver driver){
         driver.close();
         System.gc();
         //so do log
     }
-public void gotoIframe(String frameName){
-    _driver.switchTo().frame(frameName);
-}
+    public void gotoIframe(String frameName){
+        _driver.switchTo().frame(frameName);
+    }
     public void gotoIfarme(){
         _driver.switchTo().defaultContent();;
     }
+
 }
