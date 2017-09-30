@@ -13,6 +13,11 @@
         <artifactId>selenium-java</artifactId>
         <version>3.5.3</version>
     </dependency>
+        <dependency>
+            <groupId>io.selendroid</groupId>
+            <version>0.17.0</version>
+            <artifactId>selendroid-client</artifactId>
+        </dependency>
     <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>

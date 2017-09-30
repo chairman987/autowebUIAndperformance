@@ -1,3 +1,4 @@
+import Moblie.SeleuinmAndroid;
 import Model.ResutStaticsModel;
 import Performance.HttpPerformance;
 import Performance.PerformanceTool;
@@ -14,8 +15,13 @@ public class SeleniumBase {
         //TestHttpgetCode();
         //TestHttpgetCodeBatch();
 
-
-        batchStepTest();
+        SeleuinmAndroid android = new SeleuinmAndroid();
+        try {
+            android.Test();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+       // batchStepTest();
     }
 
     private static void batchStepTest() throws InterruptedException {
