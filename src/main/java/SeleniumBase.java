@@ -1,11 +1,16 @@
 import Moblie.SeleuinmAndroid;
 import Model.ResutStaticsModel;
+import Model.Task;
+import MulHttpTask.IMutHttpTaskTest;
+import MulHttpTask.MutHttpTaskPerformance;
 import Performance.HttpPerformance;
 import Performance.PerformanceTool;
 import webUITestTool.SeleniumFactory;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.UUID;
 
 public class SeleniumBase {
     public static void main(String[] args) throws InterruptedException {
@@ -14,14 +19,34 @@ public class SeleniumBase {
         //WebUI();
         //TestHttpgetCode();
         //TestHttpgetCodeBatch();
+        Task  firstStep =new Task();
+        firstStep.setKey( UUID.randomUUID().toString().replaceAll("-", ""));
+        firstStep.setParam("param=1");
+        firstStep.setUrl("http://www.chinanews.com/yl/2015/06-16/7347550.shtml" );
+        firstStep.setJsCode("  (function getValue (){ return 100;})() ");
+        Task  secondStep =new Task();
+        secondStep.setParam("param=1");
+        secondStep.setKey( UUID.randomUUID().toString().replaceAll("-", ""));
+        secondStep.setUrl("http://www.chinanews.com/yl/2015/06-16/7347550.shtml" );
+        secondStep.setJsCode(" (function getValue (){ return 100;})() ");
+        firstStep.setTask(secondStep); //必须跟上个连起来
 
+        IMutHttpTaskTest _mht = new MutHttpTaskPerformance();
+
+        _mht.excuteTask(firstStep);
+          for  (String res : _mht.getReturnSet().values()) {
+              System.out.println(res);
+          }
+        // batchStepTest();
+    }
+
+    private static void AndroidTest() {
         SeleuinmAndroid android = new SeleuinmAndroid();
         try {
             android.Test();
         } catch (Exception e) {
             e.printStackTrace();
         }
-       // batchStepTest();
     }
 
     private static void batchStepTest() throws InterruptedException {

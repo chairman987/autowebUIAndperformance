@@ -126,10 +126,10 @@ public class PerformanceTool {
                                     //System.out.println( _endTime +"-----"+nowMM);
                                     ResutStaticsModel resutStaticsModelSub = new ResutStaticsModel();
                                     String beginSub =   df.format(new Date());// new Date()为获取当前系统时间
-                                   // int    res =   getHttpStatusCode(_url,_getParam);
+                                    int    res =   getHttpStatusCode(_url,_getParam);
 
                                     //System.out.println(_step);
-                                    int    res = 200;
+                                   // int    res = 200;
                                          //   System.out.println("getHttpStatusCode excute! isrun = "+isrun+" res = "+res +" "+ _endTime
                                            //         +" "+new Date().toString() );
                                     //Log 4  记录  返回  结果和时间

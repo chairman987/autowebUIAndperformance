@@ -240,6 +240,49 @@ public class HttpPerformance  {
         }
         return  ok ;
     }
+
+    public static  String getHttpResponseStr(String url,String param){
+        String ok = "";
+        try {
+            URL u = new URL(url+"?"+param);
+            try {
+                HttpURLConnection uConnection = (HttpURLConnection) u.openConnection();
+                try {
+                    uConnection.connect();
+                   if(uConnection.getResponseCode() == 200){
+                       return " http statis "+uConnection.getResponseCode();
+                   }
+
+                    InputStream is = uConnection.getInputStream();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                    StringBuilder sb = new StringBuilder();
+                    while(br.read() != -1){
+                        sb.append(br.readLine());
+                    }
+                    String content = new String(sb);
+                    content = new String(content.getBytes("GBK"), "ISO-8859-1");
+                    // System.out.println(content);
+                    ok = content;
+                    br.close();
+                } catch (Exception e) {
+                    ok = "connect failed";
+                    e.printStackTrace();
+                    System.out.println("connect failed");
+                }
+
+            } catch (IOException e) {
+                ok = "build failed";
+                System.out.println("build failed");
+                e.printStackTrace();
+            }
+
+        } catch (MalformedURLException e) {
+            ok = "build url failed";
+            System.out.println("build url failed");
+            e.printStackTrace();
+        }
+        return  ok ;
+    }
     /**
      * 通过HttpURLConnection模拟post表单提交
      *
@@ -386,6 +429,56 @@ public class HttpPerformance  {
      * @return 所代表远程资源的响应结果
      */
     public static String sendPost(String url, String param) {
+        PrintWriter out = null;
+        BufferedReader in = null;
+        String result = "";
+        try {
+            URL realUrl = new URL(url);
+            // 打开和URL之间的连接
+            URLConnection conn = realUrl.openConnection();
+            // 设置通用的请求属性
+            conn.setRequestProperty("accept", "*/*");
+            conn.setRequestProperty("connection", "Keep-Alive");
+            conn.setRequestProperty("user-agent",
+                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+            // 发送POST请求必须设置如下两行
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            // 获取URLConnection对象对应的输出流
+            out = new PrintWriter(conn.getOutputStream());
+            // 发送请求参数
+            out.print(param);
+            // flush输出流的缓冲
+            out.flush();
+            // 定义BufferedReader输入流来读取URL的响应
+            in = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                result += line;
+            }
+        } catch (Exception e) {
+            System.out.println("发送 POST 请求出现异常！"+e);
+            e.printStackTrace();
+        }
+        //使用finally块来关闭输出流、输入流
+        finally{
+            try{
+                if(out!=null){
+                    out.close();
+                }
+                if(in!=null){
+                    in.close();
+                }
+            }
+            catch(IOException ex){
+                ex.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    public static String postHttpResponseStr(String url, String param) {
         PrintWriter out = null;
         BufferedReader in = null;
         String result = "";

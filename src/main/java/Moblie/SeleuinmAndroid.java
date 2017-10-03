@@ -2,6 +2,7 @@ package Moblie;
 
 import io.selendroid.client.SelendroidDriver;
 import io.selendroid.common.SelendroidCapabilities;
+import io.selendroid.common.device.DeviceTargetPlatform;
 import io.selendroid.standalone.SelendroidConfiguration;
 import io.selendroid.standalone.SelendroidLauncher;
 import io.selendroid.standalone.server.model.SelendroidStandaloneDriver;
@@ -11,14 +12,18 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import io.selendroid.standalone.android.*;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.URL;
 
 public class SeleuinmAndroid {
 
+    private SelendroidLauncher selendroidServer = null;
+    private WebDriver driver = null;
   private   WebDriver _selendroidDriver;
-    public void Test() throws Exception {
+
+  public void Test() throws Exception {
 
 //        SelendroidCapabilities capa = new SelendroidCapabilities("io.selendroid.testapp:0.17.0");
       //一个选择就是要从测试代码直接启动Selendroid-standalone组件
@@ -30,18 +35,15 @@ public class SeleuinmAndroid {
 
 
        // SelendroidCapabilities capa = new SelendroidCapabilities("io.selendroid.testapp:0.17.0");
+try{
 
-       // RemoteWebDriver
-        SelendroidCapabilities capa = new SelendroidCapabilities("io.selendroid.testapp:0.17.0");
-       // AndroidDriver driver = new AndroidDriver(new URL("http://localhost:4444/wd/hub/"),capa);
 
-       // SelendroidDriver selendroidDriver = new SelendroidDriver(capa);
-        WebDriver selendroidDriver = new RemoteWebDriver(capa);
-        _selendroidDriver = selendroidDriver;
-        WebElement inputField = selendroidDriver.findElement(By.id("my_text_field"));
 
-        inputField.sendKeys("Selendroid");
-
+    SelendroidCapabilities caps = new SelendroidCapabilities("io.selendroid.testapp:0.17.0");
+    driver = new SelendroidDriver(caps);
+    } catch (Exception var5) {
+    System.out.println( var5);
+    }
 
         //        SelendroidDriver selendroidDriver = new SelendroidDriver(capa);
        //WebElement inputField =  SelendroidDriver.findElement(By.id("my_text_field"));
