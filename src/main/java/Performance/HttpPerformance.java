@@ -477,6 +477,122 @@ public class HttpPerformance  {
         }
         return result;
     }
+    private static final String APPLICATION_JSON = "application/json";
+
+    private static final String CONTENT_TYPE_TEXT_JSON = "text/json";
+    public static int postJsonHttpStatic(String url, String param)
+    {
+        int ok = -1;
+        DataOutputStream out = null;
+        BufferedReader in = null;
+        String result = "";
+        try {
+            URL realUrl = new URL(url);
+            // 打开和URL之间的连接
+            URLConnection conn = realUrl.openConnection();
+            HttpURLConnection httpURLConnection = (HttpURLConnection)conn;
+            // 设置通用的请求属性
+            conn.setRequestProperty("accept", "*/*");
+            conn.setRequestProperty("connection", "Keep-Alive");
+            conn.setRequestProperty("user-agent",
+                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+            // 发送POST请求必须设置如下两行
+            // 设置文件类型:
+            conn.setRequestProperty("contentType", APPLICATION_JSON);
+            // 发送POST请求必须设置如下两行
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            // 获取URLConnection对象对应的输出流
+            out = new DataOutputStream(conn.getOutputStream());
+            // 发送请求参数
+            out.writeBytes(param);
+
+            //响应失败
+            if (httpURLConnection.getResponseCode() >= 300) {
+                throw new Exception("HTTP Request is not success, Response code is " + httpURLConnection.getResponseCode());
+            }
+            ok = httpURLConnection.getResponseCode();
+            // 定义BufferedReader输入流来读取URL的响应
+               /* in = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream()));
+                String line;
+                while ((line = in.readLine()) != null) {
+                    result += line;
+                }
+                System.out.println("发送 POST 返回内容" +result);*/
+
+        } catch (Exception e) {
+            System.out.println("发送 POST 请求出现异常！" + e);
+            e.printStackTrace();
+        }
+        //使用finally块来关闭输出流、输入流
+        finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return ok ;
+    }
+    public static String postJson(String url, String param)
+{
+    DataOutputStream out = null;
+    BufferedReader in = null;
+    String result = "";
+    try {
+        URL realUrl = new URL(url);
+        // 打开和URL之间的连接
+        URLConnection conn = realUrl.openConnection();
+        // 设置通用的请求属性
+        conn.setRequestProperty("accept", "*/*");
+        conn.setRequestProperty("connection", "Keep-Alive");
+        conn.setRequestProperty("user-agent",
+                "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+        // 设置文件类型:
+        conn.setRequestProperty("contentType", APPLICATION_JSON);
+        // 发送POST请求必须设置如下两行
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+        // 获取URLConnection对象对应的输出流
+        out = new DataOutputStream(conn.getOutputStream());
+        // 发送请求参数
+        out.writeBytes(param);
+        // flush输出流的缓冲
+        out.flush();
+        // 定义BufferedReader输入流来读取URL的响应
+        in = new BufferedReader(
+                new InputStreamReader(conn.getInputStream()));
+        String line;
+        while ((line = in.readLine()) != null) {
+            result += line;
+        }
+    } catch (Exception e) {
+        System.out.println("发送 POST 请求出现异常！"+e);
+        e.printStackTrace();
+    }
+    //使用finally块来关闭输出流、输入流
+    finally{
+        try{
+            if(out!=null){
+                out.close();
+            }
+            if(in!=null){
+                in.close();
+            }
+        }
+        catch(IOException ex){
+            ex.printStackTrace();
+        }
+    }
+    return result;
+}
 
     public static String postHttpResponseStr(String url, String param) {
         PrintWriter out = null;
