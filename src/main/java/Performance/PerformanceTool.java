@@ -13,11 +13,12 @@ import static Performance.HttpPerformance.getHttpStatusCode;
 import static Performance.HttpPerformance.sendGet;
 
 public class PerformanceTool {
- private HashMap<String , ResutStaticsModel>  _map = new HashMap<String , ResutStaticsModel>();
+    private HashMap<String, ResutStaticsModel> _map = new HashMap<String, ResutStaticsModel>();
 
- public HashMap<String , ResutStaticsModel> get_map(){
-     return _map;
- }
+    public HashMap<String, ResutStaticsModel> get_map() {
+        return _map;
+    }
+
     public static int compare_date(String DATE1, String DATE2) {
 
 
@@ -39,11 +40,12 @@ public class PerformanceTool {
         }
         return 0;
     }
+
     public static int compare_date(Date begin, Date end) {
         try {
 
             if (begin.getTime() > end.getTime()) {
-              //  System.out.println("dt1 在dt2前");
+                //  System.out.println("dt1 在dt2前");
                 return 1;
             } else if (begin.getTime() < end.getTime()) {
                 //  System.out.println("dt1在dt2后");
@@ -56,148 +58,145 @@ public class PerformanceTool {
         }
         return 0;
     }
-    private  String  _url = "";
-    private  String  _getParam = "";
-    private  String  _postParam = "";
-    private  int  _step = 0;
-    private  int  httpOkCode = 200 ;
-    private  Date _endTime = new Date();
+
+    private String _url = "";
+    private String _getParam = "";
+    private String _postParam = "";
+    private int _step = 0;
+    private int httpOkCode = 200;
+    private Date _endTime = new Date();
     private Integer _suc = 0;
     private Integer _fail = 0;
     private Integer _all = 0;
-    private List<ResutStaticsModel> _subList= new Vector<ResutStaticsModel>();
+    private List<ResutStaticsModel> _subList = new Vector<ResutStaticsModel>();
     private ResutStaticsModel _resutStaticsModel = new ResutStaticsModel();
     private boolean isrun = true;
 
-    public  boolean getIsRun(){
+    public boolean getIsRun() {
         return this.isrun;
     }
 
-    public  ResutStaticsModel get_resutStaticsModel(){
+    public ResutStaticsModel get_resutStaticsModel() {
         return _resutStaticsModel;
     }
+
     //执行测试 开始  n个 实现每次增加n个,直到执行完
-    public  void processTest(String url ,String param,int maxTests,int step ,int maxStep,boolean iswaiteTime,Integer mm) throws InterruptedException {
+    public void processTest(String url, String param, int maxTests, int step, int maxStep, boolean iswaiteTime, Integer mm) throws InterruptedException {
 
         isrun = true;
         Date now = new Date();
-        Date endTime = new Date(now .getTime() + mm*1000);
+        Date endTime = new Date(now.getTime() + mm * 1000);
 
         HttpPerformance _http = new HttpPerformance("");
 
         int indexCurrent = 0;
-        if(step>maxStep)
+        if (step > maxStep)
             step = maxStep;
         _url = url;
         _getParam = param;
         _step = step;
         _endTime = endTime;
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-        String begin =   df.format(new Date());// new Date()为获取当前系统时间
-        while (indexCurrent<maxTests){
+        String begin = df.format(new Date());// new Date()为获取当前系统时间
+        while (indexCurrent < maxTests) {
             //System.out.println("not  exit  while out");
-           // System.out.println(maxTests +"----" +  indexCurrent);
-            if(isrun == false){
+            // System.out.println(maxTests +"----" +  indexCurrent);
+            if (isrun == false) {
                 break;
             }
 
-            try{
+            try {
 
                 ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
-                    cachedThreadPool.execute(new Runnable() {
-                        public void run() {
+                cachedThreadPool.execute(new Runnable() {
+                    public void run() {
 
-                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-                            String begin =   df.format(new Date());// new Date()为获取当前系统时间
-                            int processCounter = 1;
-                            int processZeroCounter = 0;
-                            for(int index = 0;index < _step;index++ ){
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+                        String begin = df.format(new Date());// new Date()为获取当前系统时间
+                        int processCounter = 1;
+                        int processZeroCounter = 0;
+                        for (int index = 0; index < _step; index++) {
 
 
-                                while(true){
+                            while (true) {
 
-                                    Date nowMM = new Date();
+                                Date nowMM = new Date();
 
-                                   if(compare_date(_endTime,nowMM) != 1){
-                                            isrun = false;
-                                            break;
-                                   }
-                                    //System.out.println( _endTime +"-----"+nowMM);
-                                    ResutStaticsModel resutStaticsModelSub = new ResutStaticsModel();
-                                    String beginSub =   df.format(new Date());// new Date()为获取当前系统时间
-                                    int    res =   getHttpStatusCode(_url,_getParam);
+                                if (compare_date(_endTime, nowMM) != 1) {
+                                    isrun = false;
+                                    break;
+                                }
+                                //System.out.println( _endTime +"-----"+nowMM);
+                                ResutStaticsModel resutStaticsModelSub = new ResutStaticsModel();
+                                String beginSub = df.format(new Date());// new Date()为获取当前系统时间
+                                int res = getHttpStatusCode(_url, _getParam);
 
-                                    //System.out.println(_step);
-                                   // int    res = 200;
-                                         //   System.out.println("getHttpStatusCode excute! isrun = "+isrun+" res = "+res +" "+ _endTime
-                                           //         +" "+new Date().toString() );
-                                    //Log 4  记录  返回  结果和时间
-                                    if (res == httpOkCode)
-                                    {
-                                        _suc++;
-                                        resutStaticsModelSub.setSuce(processCounter);
-                                        resutStaticsModelSub.setFail(processZeroCounter);
-                                    }
-                                    else
-                                    {
-                                        _fail ++;
-                                        resutStaticsModelSub.setSuce(processZeroCounter);
-                                        resutStaticsModelSub.setFail(processCounter);
-                                    }
-                                    _all++;
-                                    String endSub =   df.format(new Date());
-                                    resutStaticsModelSub.setAll(processCounter);
-                                    resutStaticsModelSub.setMark(beginSub+":"+endSub);
-                                    resutStaticsModelSub.setBatchId(String.valueOf(java.util.UUID.randomUUID()) );
-                                    _map.put( UUID.randomUUID().toString().replaceAll("-", ""),resutStaticsModelSub);
+                                //System.out.println(_step);
+                                // int    res = 200;
+                                //   System.out.println("getHttpStatusCode excute! isrun = "+isrun+" res = "+res +" "+ _endTime
+                                //         +" "+new Date().toString() );
+                                //Log 4  记录  返回  结果和时间
+                                if (res == httpOkCode) {
+                                    _suc++;
+                                    resutStaticsModelSub.setSuce(processCounter);
+                                    resutStaticsModelSub.setFail(processZeroCounter);
+                                } else {
+                                    _fail++;
+                                    resutStaticsModelSub.setSuce(processZeroCounter);
+                                    resutStaticsModelSub.setFail(processCounter);
+                                }
+                                _all++;
+                                String endSub = df.format(new Date());
+                                resutStaticsModelSub.setAll(processCounter);
+                                resutStaticsModelSub.setMark(beginSub + ":" + endSub);
+                                resutStaticsModelSub.setBatchId(String.valueOf(java.util.UUID.randomUUID()));
+                                _map.put(UUID.randomUUID().toString().replaceAll("-", ""), resutStaticsModelSub);
 //   System.out.println("getHttpStatusCode excute! isrun = "+isrun+" res = "+res +" "+ _endTime
 //                                             +" "+new Date().toString() );
 
-                                    try {
-                                        Thread.sleep(500);// 睡眠100毫秒
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
+                                try {
+                                    Thread.sleep(500);// 睡眠100毫秒
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
                                 }
+                            }
 //                                if(isrun == false)
 //                                {
 //                                    index = _step;
 //                                    break;
 //                                }
-                            }
                         }
-                    });
+                    }
+                });
 
-                if(isrun == false)
-                {
+                if (isrun == false) {
                     cachedThreadPool.shutdown();
                 }
 
                 indexCurrent += step;
-                    //Log 4  记录  返回  结果和时间
+                //Log 4  记录  返回  结果和时间
 
-            }catch (Exception e) {}
-
-
-
-            if(step<maxStep)
-                step += step;
-
-            if(step>maxTests)
-            {
-                step = step-maxTests ;//保证不会超出
+            } catch (Exception e) {
             }
 
-            if(iswaiteTime)
+
+            if (step < maxStep)
+                step += step;
+
+            if (step > maxTests) {
+                step = step - maxTests;//保证不会超出
+            }
+
+            if (iswaiteTime)
                 Thread.sleep(100);// 睡眠100毫秒
         }
-        String end =   df.format(new Date());
+        String end = df.format(new Date());
         _resutStaticsModel.setAll(_all);
         _resutStaticsModel.setSuce(_suc);
         _resutStaticsModel.setFail(_fail);
-        _resutStaticsModel.setMark(begin+"结束"+end);
-        _resutStaticsModel.setBatchId(String.valueOf(java.util.UUID.randomUUID()) );
+        _resutStaticsModel.setMark(begin + "结束" + end);
+        _resutStaticsModel.setBatchId(String.valueOf(java.util.UUID.randomUUID()));
         _resutStaticsModel.setSubList(_subList);
     }
 

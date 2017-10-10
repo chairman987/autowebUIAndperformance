@@ -4,11 +4,11 @@ public class Task {
 
     private String key;
 
-    private String url ;
+    private String url;
 
-    private  String param;
+    private String param;
 
-    private  String method = "get";
+    private String method = "get";
 
     private String getResult;
 
@@ -24,12 +24,15 @@ public class Task {
     public String getKey() {
         return key;
     }
+
     public void setKey(String key) {
         this.key = key;
     }
+
     public String getUrl() {
         return url;
     }
+
     public void setUrl(String url) {
         this.url = url;
     }
@@ -37,14 +40,16 @@ public class Task {
     public String getParam() {
         return param;
     }
+
     public void setParam(String param) {
         this.param = param;
     }
 
 
     public String getMethod() {
-        return method ;
+        return method;
     }
+
     public void setMethod(String method) {
         this.method = method;
     }
@@ -52,12 +57,15 @@ public class Task {
     public String getResult() {
         return getResult;
     }
+
     public void setResult(String getResult) {
         this.getResult = getResult;
     }
+
     public Task getTask() {
         return next;
     }
+
     public void setTask(Task next) {
         this.next = next;
     }
@@ -66,5 +74,7 @@ public class Task {
         return jsCode;
     }
 
-    public void setJsCode(String jsCode) { this.jsCode = jsCode; }
+    public void setJsCode(String jsCode) {
+        this.jsCode = jsCode;
+    }
 }
